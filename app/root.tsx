@@ -1,3 +1,4 @@
+import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import {
   Links,
   Meta,
@@ -27,4 +28,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return <Outlet />;
+}
+
+
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  if (isRouteErrorResponse(error)) {
+    return <div>
+      <h1> Route Error</h1>
+    </div>
+  }
+  return <div>
+    <h1>
+      Uncaught Error:
+    </h1>
+    <div>
+      <pre>{JSON.stringify(error, null, 2)}</pre>
+    </div>
+  </div>
 }
