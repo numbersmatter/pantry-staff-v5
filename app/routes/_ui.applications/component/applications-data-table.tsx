@@ -88,6 +88,11 @@ const columns: ColumnDef<ApplicationRow>[] = [
         </div>
       )
     }
+  },
+  {
+    accessorKey: "lname",
+    header: "Last Name",
+    cell: ({ row }) => row.original.lname,
   }
 ];
 

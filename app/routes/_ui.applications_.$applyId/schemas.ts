@@ -31,3 +31,8 @@ export const RemoveStudentSchema = z.object({
 export const ValidActionTypes = z.object({
   type: z.enum(["addStudent", "removeStudent"]),
 });
+
+export const SetStatusSchema = z.object({
+  status: z.enum(["approved", "rejected"]),
+  notes: z.string().optional(),
+});

@@ -3,6 +3,7 @@ import { json, useLoaderData } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import OverviewCard from "./components/overview-card";
 import { Student, StudentsCard } from "./components/students-card";
+import StatusCard from "./components/status-card";
 
 export const loader = async (args: LoaderFunctionArgs) => {
 
@@ -20,7 +21,9 @@ export const loader = async (args: LoaderFunctionArgs) => {
       id: "2",
     },
   ]
-  return json({ students });
+
+  const status = "pending"
+  return json({ students, status });
 };
 
 
@@ -40,6 +43,7 @@ export default function ApplicationReview() {
     <>
       <OverviewCard />
       <StudentsCard />
+      <StatusCard />
     </>
   )
 }
