@@ -1,6 +1,7 @@
 import { json, useLoaderData } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import DashboardHeader from "./component/dashboard-header";
+import { ApplicationsDataTable } from "./component/applications-data-table";
 
 
 type Application = {
@@ -28,6 +29,7 @@ export default function ApplicationsPage() {
   return (
     <>
       <DashboardHeader />
+      <ApplicationsDataTable />
     </>
   )
 }

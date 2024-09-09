@@ -1,3 +1,4 @@
+import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { json, Outlet, useLoaderData } from "@remix-run/react"
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import App from "~/root";
@@ -34,3 +35,22 @@ export default function Layout() {
     </AppShell>
   )
 }
+
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  if (isRouteErrorResponse(error)) {
+    return <div>
+      <h1> Route Error</h1>
+    </div>
+  }
+  return <div>
+    <h1>
+      Uncaught Error:
+    </h1>
+    <div>
+      <pre>{JSON.stringify(error, null, 2)}</pre>
+    </div>
+  </div>
+}
+
