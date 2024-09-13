@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import {
   ColumnDef,
   useReactTable,
@@ -10,16 +10,11 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import { loader } from "../route";
 
 
 type ApplicationRow = {
   id: string,
-  user: {
-    fname: string,
-    lname: string,
-    email: string,
-    phone: string,
-  },
   lname: string,
   fname: string,
   status: string,
@@ -31,12 +26,6 @@ type ApplicationRow = {
 const data: ApplicationRow[] = [
   {
     id: "1",
-    user: {
-      fname: "John",
-      lname: "Doe",
-      email: "john.doe@example.com",
-      phone: "555-555-5555",
-    },
     lname: "Doe",
     fname: "John",
     status: "Pending",
@@ -45,12 +34,6 @@ const data: ApplicationRow[] = [
   },
   {
     id: "2",
-    user: {
-      fname: "Jane",
-      lname: "Doe",
-      email: "jane.doe@example.com",
-      phone: "555-555-5555",
-    },
     lname: "Smith",
     fname: "Jane",
     status: "Approved",
@@ -98,10 +81,12 @@ const columns: ColumnDef<ApplicationRow>[] = [
 
 
 export function ApplicationsDataTable() {
+  const { applications } = useLoaderData<typeof loader>();
+
 
 
   const table = useReactTable({
-    data,
+    data: applications,
     columns,
     // onSortingChange: setSorting,
     // onColumnFiltersChange: setColumnFilters,

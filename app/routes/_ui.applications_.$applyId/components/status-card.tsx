@@ -12,8 +12,7 @@ import { loader } from "../route";
 
 
 export default function StatusCard() {
-  const { status } = useLoaderData<typeof loader>()
-
+  const { status, overview } = useLoaderData<typeof loader>()
 
   return (
     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8" >
@@ -27,31 +26,26 @@ export default function StatusCard() {
         <CardContent>
           <div className="mt-6">
             <dl className="grid grid-cols-1 sm:grid-cols-2">
-              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-                <dt className="text-sm font-medium leading-6 text-gray-900">
-                  Status
-                </dt>
-                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                  Approved
-                </dd>
-              </div>
-              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+              <div
+                className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0"
+              >
                 <dt className="text-sm font-medium leading-6 text-gray-900">
                   Submitted on
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                  2023-01-01
+                  {overview.submited_at}
                 </dd>
               </div>
-              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+              <div
+                className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0"
+              >
                 <dt className="text-sm font-medium leading-6 text-gray-900">
                   Last Updated
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                  2023-01-01
+                  {overview.updated_at}
                 </dd>
               </div>
-
             </dl>
           </div>
         </CardContent>

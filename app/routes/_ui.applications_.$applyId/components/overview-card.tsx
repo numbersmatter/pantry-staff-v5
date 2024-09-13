@@ -1,34 +1,26 @@
+import { useLoaderData } from "@remix-run/react";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle
 } from "~/components/ui/card";
+import { loader } from "../route";
+import { SetStatusDialog } from "./set-status-dialog";
 
 
 export default function OverviewCard() {
+  const { overview } = useLoaderData<typeof loader>();
 
-  const overview = {
-    id: "1",
-    fname: "John",
-    lname: "Doe",
-    email: "john.doe@example.com",
-    phone: "555-555-5555",
-    description: "Application Description",
-    status: "Pending",
-    created_at: "2023-01-01",
-    updated_at: "2023-01-01",
-    user_id: "1",
-    submited_at: "2023-01-01",
-  }
 
 
   return (
     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8" >
       <Card>
         <CardHeader>
-          <CardTitle>Application Overview</CardTitle>
+          <CardTitle>Application Overview : {overview.status}</CardTitle>
           <CardDescription>
             Submitted on: {overview.submited_at}
           </CardDescription>
@@ -71,8 +63,10 @@ export default function OverviewCard() {
 
             </dl>
           </div>
-
         </CardContent>
+        <CardFooter>
+          <SetStatusDialog />
+        </CardFooter>
       </Card>
     </div>
   )

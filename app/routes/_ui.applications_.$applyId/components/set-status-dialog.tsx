@@ -1,30 +1,29 @@
-import { getFormProps, useForm } from "@conform-to/react"
-import { useFetcher, useLoaderData } from "@remix-run/react"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { z } from "zod"
-// import { toast } from "@/components/hooks/use-toast"
-import { Button } from "~/components/ui/button"
+import { getFormProps, useForm } from "@conform-to/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import { z } from "zod";
+import { Button } from "~/components/ui/button";
+import { action, loader } from "../route";
+import { parseWithZod } from "@conform-to/zod";
+import { SetStatusSchema } from "../schemas";
+import { useState, useEffect } from "react";
+import { cn } from "~/lib/utils";
+import type { ApplicationStatus } from "~/db/applications/app-types";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "~/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover"
-import { action, loader } from "../route"
-import { parseWithZod } from "@conform-to/zod"
-import { SetStatusSchema } from "../schemas"
-import { useState } from "react"
-import { cn } from "~/lib/utils"
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "~/components/ui/dialog";
 
 
-const ApplicationStatus = [
+type Status = "pending" | "approved" | "declined"
+
+
+const applicationStatus = [
   {
     value: "pending",
     label: "Pending",
@@ -37,18 +36,14 @@ const ApplicationStatus = [
     value: "declined",
     label: "Declined",
   },
-  {
-    value: "review",
-    label: "Review",
-  },
 ]
 
 
 export function SetStatusDialog() {
-  const { status } = useLoaderData<typeof loader>()
+  const { status, semester } = useLoaderData<typeof loader>()
   const fetcher = useFetcher<typeof action>();
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState(status)
+  const [value, setValue] = useState<ApplicationStatus>(status)
   const [form, fields] = useForm({
     // Sync the result of last submission
     lastResult: fetcher.data,
@@ -63,60 +58,50 @@ export function SetStatusDialog() {
     shouldRevalidate: 'onBlur',
   })
 
-  function onSubmit(data: z.infer<typeof SetStatusSchema>) {
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // })
-  }
+  const isFetching = fetcher.state !== "idle";
+  const success = fetcher.data?.status === "success" ? true : false;
+
+  useEffect(() => {
+    if (success && !isFetching) {
+      setOpen(false);
+    }
+  }, [success, isFetching]);
+
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {value
-            ? ApplicationStatus.find((status) => status.value === value)?.label
-            : "Select Status..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandGroup>
-              {ApplicationStatus.map((status) => (
-                <CommandItem
-                  key={status.value}
-                  value={status.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === status.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {status.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default">Review</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Review Application</DialogTitle>
+          <DialogDescription>
+            Approve application to add family to {semester.name}.
+          </DialogDescription>
+        </DialogHeader>
+        <fetcher.Form method="POST" className="grid gap-4 py-4">
+          <Button
+            variant="secondary" className="  w-full bg-green-600 text-white hover:bg-green-800"
+            type="submit"
+            name="status"
+            value="approved"
+          >
+            Approve
+          </Button>
+          <Button
+            variant="destructive" className="w-full hover:bg-red-800"
+            type="submit"
+            name="status"
+            value="declined"
+          >
+            Decline
+          </Button>
+        </fetcher.Form>
+        <DialogFooter>
+          <DialogClose>Close</DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

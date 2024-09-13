@@ -18,6 +18,7 @@ import { loader } from "../route"
 export type NavId =
   "dashboard"
   | "applications"
+  | "opportunities"
 
 
 const main_nav: Array<{ id: NavId, name: string, to: string, icon: ElementType }> = [
@@ -32,6 +33,12 @@ const main_nav: Array<{ id: NavId, name: string, to: string, icon: ElementType }
     name: "Applications",
     to: "/applications",
     icon: Users
+  },
+  {
+    id: "opportunities",
+    name: "Food Opportunities",
+    to: "/food-opportunities",
+    icon: ShoppingCart
   },
 
 ]
