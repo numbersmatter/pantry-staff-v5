@@ -81,7 +81,6 @@ export default function AppShell({
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               {main_nav.map((nav_item) => {
-                const number = main_notification?.[nav_item.id].number ?? 0
 
                 return (
 
@@ -92,11 +91,6 @@ export default function AppShell({
                   >
                     <nav_item.icon className="h-4 w-4" />
                     {nav_item.name}
-                    {number > 0 && (
-                      <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                        {main_notification[nav_item.id].number}
-                      </Badge>
-                    )}
                   </NavLink>
                 )
               }
@@ -131,7 +125,6 @@ export default function AppShell({
               <nav className="mt-3.5 grid gap-2 text-lg font-medium">
                 {
                   main_nav.map((nav_item) => {
-                    const number = main_notification?.[nav_item.id].number ?? 0
                     return (
                       <NavLink
                         key={nav_item.id}
@@ -145,13 +138,6 @@ export default function AppShell({
                       >
                         <nav_item.icon className="h-6 w-6" />
                         {nav_item.name}
-                        {
-                          number > 0 && (
-                            <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                              {main_notification[nav_item.id].number}
-                            </Badge>
-                          )
-                        }
                       </NavLink>
                     )
                   }
