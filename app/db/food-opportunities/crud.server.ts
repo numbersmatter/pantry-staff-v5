@@ -1,13 +1,17 @@
+import { Timestamp } from "firebase-admin/firestore";
 import { intializeFb } from "../firebase.server";
 import { firestore } from "../firestore.server";
+
+export type OpportunityType = "pickup" | "drive-thru" | "error";
+export type OpportunityStatus = "open" | "closed" | "past";
 
 interface FoodOpportunity {
   id: string;
   name: string;
   semesterId: string;
-  status: "open" | "closed" | "past";
-  code: "pickup" | "drive-thru" | "error";
-  date: string;
+  status: OpportunityStatus;
+  type: OpportunityType;
+  date: Timestamp;
   timeSlots: { id: string; label: string }[];
 }
 
@@ -26,8 +30,7 @@ export const foodOpportunityDb = () => {
       semesterId: doc.data()?.semesterId ?? "error",
       status: doc.data()?.status ?? "error",
       code: doc.data()?.code ?? "error",
-      date: doc.data()?.date.toDate().toLocaleDateString() ?? "error",
-      applied: doc.data()?.applied ?? "error",
+      date: doc.data()?.date,
       timeSlots: doc.data()?.timeSlots ?? [{ id: "default", label: "default" }],
     };
   };
@@ -41,9 +44,8 @@ export const foodOpportunityDb = () => {
         name: doc.data()?.name ?? "error",
         semesterId: doc.data()?.semesterId ?? "error",
         status: doc.data()?.status ?? "error",
-        code: doc.data()?.code ?? "error",
-        date: doc.data()?.date.toDate().toLocaleDateString() ?? "error",
-        applied: doc.data()?.applied ?? "error",
+        type: doc.data()?.code ?? "error",
+        date: doc.data()?.date,
         timeSlots: doc.data()?.timeSlots ?? [
           { id: "default", label: "default" },
         ],

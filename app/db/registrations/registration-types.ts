@@ -17,7 +17,7 @@ interface Registration {
   id: string;
   userId: string;
   semesterId: string;
-  status: "in-progress" | "pending" | "accepted" | "declined" | "error";
+  status: "registered" | "removed" | "error";
   primaryContact: {
     fname: string;
     lname: string;
@@ -32,4 +32,12 @@ interface Registration {
 
 interface RegistrationDb extends Omit<Registration, "id"> {}
 
-export type { Registration, RegistrationDb, Student, Minor };
+interface RegistrationCreate extends Omit<RegistrationDb, "createdDate"> {}
+
+export type {
+  Registration,
+  RegistrationDb,
+  Student,
+  Minor,
+  RegistrationCreate,
+};

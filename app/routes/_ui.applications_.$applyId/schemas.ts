@@ -33,6 +33,6 @@ export const ValidActionTypes = z.object({
 });
 
 export const SetStatusSchema = z.object({
-  status: z.enum(["approved", "declined"]),
+  status: z.enum(["accepted", "declined"]),
   notes: z.string().optional(),
 });

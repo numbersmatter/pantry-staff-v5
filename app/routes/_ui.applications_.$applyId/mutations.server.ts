@@ -3,8 +3,9 @@ import { ApplicationStatus } from "~/db/applications/app-types";
 import { db } from "~/db/db.server";
 import { SetStatusSchema } from "./schemas";
 import { ActionFunctionArgs, json } from "@remix-run/node";
+import { RegistrationCreate } from "~/db/registrations/registration-types";
 
-const writeChangeInStatus = async ({
+const mutateDb = async ({
   semesterId,
   applicationId,
   status,
@@ -13,17 +14,42 @@ const writeChangeInStatus = async ({
   applicationId: string;
   status: ApplicationStatus;
 }) => {
+  // get application
+  const applicationDoc = await db
+    .applications({ semesterId })
+    .read(applicationId);
+  if (!applicationDoc) {
+    throw new Error("Application not found");
+  }
+  // update application
   const writeApplication = await db.applications({ semesterId }).update({
     id: applicationId,
     data: {
       status,
     },
   });
+  // create registration if status is accepted
+  if (status === "accepted") {
+    const regData: RegistrationCreate = {
+      userId: applicationId,
+      semesterId: semesterId,
+      status: "registered",
+      primaryContact: applicationDoc.primaryContact,
+      adults: applicationDoc.adults,
+      students: applicationDoc.students,
+      minors: applicationDoc.minors,
+    };
+
+    // write registration
+    const writeRegistration = await db
+      .registrations({ semesterId })
+      .create({ data: regData, id: applicationId });
+  }
 
   return writeApplication;
 };
 
-export const setStatus = async ({
+export const registerForSemester = async ({
   request,
   params,
 }: {
@@ -42,7 +68,7 @@ export const setStatus = async ({
   const submission = parseWithZod(formInput, { schema: SetStatusSchema });
 
   if (submission.status === "success") {
-    const writeApplication = await writeChangeInStatus({
+    const writeApplication = await mutateDb({
       semesterId: activeSemester.semester_id,
       applicationId,
       status: submission.value.status as ApplicationStatus,

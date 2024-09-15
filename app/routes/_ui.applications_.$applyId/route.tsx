@@ -6,7 +6,7 @@ import { Student, StudentsCard } from "./components/students-card";
 import StatusCard from "./components/status-card";
 import { getApplication } from "./data-fetcher.server";
 import { requireAuth } from "~/auth/requireAuth.server";
-import { setStatus } from "./mutations.server";
+import { registerForSemester } from "./mutations.server";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const applicationId = args.params.applyId ?? "error";
@@ -42,7 +42,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
 export const action = async (args: ActionFunctionArgs) => {
   await requireAuth(args.request);
 
-  return await setStatus({ request: args.request, params: args.params });
+  return await registerForSemester({ request: args.request, params: args.params });
 
 };
 

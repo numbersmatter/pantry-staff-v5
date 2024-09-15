@@ -85,7 +85,7 @@ export function SetStatusDialog() {
             variant="secondary" className="  w-full bg-green-600 text-white hover:bg-green-800"
             type="submit"
             name="status"
-            value="approved"
+            value="accepted"
           >
             Approve
           </Button>
