@@ -19,6 +19,9 @@ export default function FoodOpportunitiesIndex() {
     <>
       <h1>Food Opportunities</h1>
       <OpportunitiesDataTable />
+      <div>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
     </>
   )
 }
