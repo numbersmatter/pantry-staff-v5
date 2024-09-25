@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet"
 import { ElementType, } from "react"
 import { cn } from "~/lib/utils"
 import { loader } from "../route"
+import { useLogoutFetcher } from "~/routes/logout/logout-fetcher"
 // import { SignedIn, UserButton } from "@clerk/remix"
 
 export type NavId =
@@ -36,7 +37,7 @@ const main_nav: Array<{ id: NavId, name: string, to: string, icon: ElementType }
   },
   {
     id: "opportunities",
-    name: "Food Opportunities",
+    name: "Food Events",
     to: "/food-opportunities",
     icon: ShoppingCart
   },
@@ -61,6 +62,8 @@ export default function AppShell({
 
 }) {
   const { pantry_name, main_notification } = useLoaderData<typeof loader>()
+
+  const { logout } = useLogoutFetcher()
 
 
   return (
@@ -98,11 +101,7 @@ export default function AppShell({
             </nav>
           </div>
           <div className="mt-auto p-4">
-            {/* <SignedIn>
-              <UserButton
-                showName
-              />
-            </SignedIn> */}
+            <Button variant={"destructive"} onClick={logout}>Logout</Button>
           </div>
         </div>
       </div>
