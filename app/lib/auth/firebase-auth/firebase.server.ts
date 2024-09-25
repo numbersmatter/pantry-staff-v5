@@ -8,7 +8,7 @@ import { getAuth as getServerAuth } from "firebase-admin/auth";
 
 import * as firebaseRest from "./firebase-rest";
 
-// Warning: though getRestConfig is only run server side, its return value may be sent to the client
+// // Warning: though getRestConfig is only run server side, its return value may be sent to the client
 export const getRestConfig = (): {
   apiKey: string;
   domain: string;
@@ -58,6 +58,18 @@ if (getServerApps().length === 0) {
   initializeServerApp(config);
 }
 
+const exportAuth = () => {
+  const serviceAccountText = process.env.SERVICE_ACCOUNT ?? "";
+  const serviceAccount = JSON.parse(serviceAccountText);
+  const config = {
+    credential: serverCert(serviceAccount),
+    storageBucket: `${process.env.PROJECT_ID}.appspot.com`,
+  };
+  initializeServerApp(config, "auth");
+
+  return getServerAuth();
+};
+
 const signInWithPassword = async (email: string, password: string) => {
   const signInResponse = await firebaseRest.signInWithPassword(
     {
@@ -75,22 +87,22 @@ const signInWithPassword = async (email: string, password: string) => {
   return signInResponse;
 };
 
-// const signInWithGoogleAccessToken = async (accessToken: string) => {
-//   // const signInResponse = await firebaseRest(
-//   //   {
-//   //     postBody: `access_token=${accessToken}`,
-//   //     requestUri: "http://localhost",
-//   //     returnSecureToken: true,
-//   //   },
-//   //   restConfig
-//   // );
-//   // if (firebaseRest.isError(signInResponse)) {
-//   //   throw new Error(signInResponse.error.message);
-//   // }
-//   // return signInResponse;
-// };
+// // const signInWithGoogleAccessToken = async (accessToken: string) => {
+// //   // const signInResponse = await firebaseRest(
+// //   //   {
+// //   //     postBody: `access_token=${accessToken}`,
+// //   //     requestUri: "http://localhost",
+// //   //     returnSecureToken: true,
+// //   //   },
+// //   //   restConfig
+// //   // );
+// //   // if (firebaseRest.isError(signInResponse)) {
+// //   //   throw new Error(signInResponse.error.message);
+// //   // }
+// //   // return signInResponse;
+// // };
 
 export const authFirebase = {
-  server: getServerAuth(),
+  server: exportAuth(),
   signInWithPassword,
 };

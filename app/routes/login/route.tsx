@@ -39,7 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     AuthStrategies.FORM,
     request,
     {
-      successRedirect: "/home",
+      successRedirect: "/",
       failureRedirect: "/login",
     }
   )

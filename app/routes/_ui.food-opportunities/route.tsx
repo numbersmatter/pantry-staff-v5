@@ -3,9 +3,10 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { requireAuth } from "~/auth/requireAuth.server";
 import { getOpportunities } from "./data-fetchers.server";
 import { OpportunitiesDataTable } from "./components/opp-table";
+import { protectedRoute } from "~/lib/auth/auth.server";
 
 export const loader = async (args: LoaderFunctionArgs) => {
-  await requireAuth(args.request);
+  await protectedRoute(args.request);
   const opportunities = await getOpportunities();
   return json({ opportunities });
 };

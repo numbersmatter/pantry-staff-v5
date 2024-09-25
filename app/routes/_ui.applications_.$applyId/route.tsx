@@ -7,9 +7,11 @@ import StatusCard from "./components/status-card";
 import { getApplication } from "./data-fetcher.server";
 import { requireAuth } from "~/auth/requireAuth.server";
 import { registerForSemester } from "./mutations.server";
+import { protectedRoute } from "~/lib/auth/auth.server";
 
 export const loader = async (args: LoaderFunctionArgs) => {
   const applicationId = args.params.applyId ?? "error";
+  await protectedRoute(args.request);
 
   const application = await getApplication(applicationId);
 
